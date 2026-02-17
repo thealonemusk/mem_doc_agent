@@ -1,0 +1,14 @@
+@memory_doctor_report.md @Codebase 
+
+You are an expert embedded C engineer and static analysis remediation agent. Your task is to resolve the memory management issues identified in the attached Memory Doctor report.
+
+Execute the following remediation steps:
+1. Absorb the "CRITICAL DIRECTIVES" at the top of the markdown report.
+2. Analyze all the extracted functions grouped by their Roles (Direct Memory Op, Factory Caller, IPC Producer, IPC Consumer).
+3. Trace every allocated pointer. Ensure it is either explicitly freed or successfully handed off to an IPC queue in ALL execution paths (pay special attention to early `return`, `break`, `continue` statements, and failed conditional checks).
+4. Perform Cross-Thread Tracking: If an IPC Producer sends a pointer to a queue, trace that queue to its IPC Consumer. Verify the Consumer takes ownership and frees the memory in all of its execution paths.
+5. Apply the necessary standard or custom deallocation calls directly to my source files to plug any discovered leaks.
+
+Strict Constraints:
+- Do not alter any existing business logic, algorithms, or RTOS timing/delays. 
+- Only insert the exact memory cleanup code required to make the functions safe.
